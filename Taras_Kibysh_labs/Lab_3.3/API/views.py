@@ -29,8 +29,8 @@ class CommonMixin:
 
 
 class UserView(APIView, CommonMixin):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [SessionAuthentication, BasicAuthentication]
+    # permission_classes = [IsAuthenticated]
     serializer_class = CustomerSerializer
     repository = UserRepository(CustomerProfile)
 

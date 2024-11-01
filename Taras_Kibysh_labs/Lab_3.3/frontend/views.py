@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 import requests
+from django.shortcuts import redirect
 
 # Create your views here.
 
@@ -43,6 +44,24 @@ def get_user(request, id):
         print(f"Помилка API: Статус {response.status_code}")
 
     return render(request, 'frontend/one_user.html', {'user': user})
+
+
+
+def delete_user(request, id):
+    url = f"{base_url}user/{id}/"
+    response = requests.delete(url, cookies=request.COOKIES)
+    print(F" problem {response.content}")
+
+    # Проверка, был ли запрос успешным
+    if response.status_code == 204:
+        # Если успешно, перенаправляем на список пользователей
+        return redirect('user_list_view')  # Здесь укажите имя вашего URL для списка пользователей
+    else:
+        # Обработка ошибок (например, вывод сообщения об ошибке)
+        return redirect('user_list_view')  # Укажите вашу страницу ошибок или другую логику
+
+
+
 
 
 
