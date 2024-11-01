@@ -32,7 +32,7 @@ def user_list_view(request):
     return render(request, 'frontend/list.html', {'users': users})
 
 
-def get_user(request, id):
+def get_user_bub(request, id):
     url = f"{base_url}user/{id}/"
     response = requests.get(url, cookies=request.COOKIES)
 

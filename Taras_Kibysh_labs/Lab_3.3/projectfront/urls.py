@@ -26,7 +26,7 @@ urlpatterns = [
     path('playground/', include('playground.urls')),
     path('', include('API.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('site/', include('frontend.urls')),
+    path('dom/site/', include('frontend.urls')),
 ]
 
 admin.site.index_title = 'insurance company'
