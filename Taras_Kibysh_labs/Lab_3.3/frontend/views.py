@@ -32,17 +32,17 @@ def user_list_view(request):
     return render(request, 'frontend/list.html', {'users': users})
 
 
-def get_user_bub(request, id):
+def get_user(request, id):
     url = f"{base_url}user/{id}/"
     response = requests.get(url, cookies=request.COOKIES)
 
     if response.status_code == 200:
-        users = response.json()
+        user = response.json()
     else:
-        users = []
+        user = None
         print(f"Помилка API: Статус {response.status_code}")
 
-    return render(request, 'frontend/one_user.html', {'users': users})
+    return render(request, 'frontend/one_user.html', {'user': user})
 
 
 
