@@ -77,7 +77,7 @@
             {% for user in users %}
             <tr>
                 <td colspan="2"> <!-- Об'єднує дві колонки в одну для великої кнопки -->
-                    <button class="big-button" onclick="window.location.href='/site/{{ user.id }}'">
+                    <button class="big-button" onclick="window.location.href='/site/{{ user.id }}/'">
                         ID: {{ user.id }} - Ім'я: {{ user.name }}
                     </button>
                 </td>
