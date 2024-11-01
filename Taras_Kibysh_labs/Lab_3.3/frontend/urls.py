@@ -5,6 +5,7 @@ from .views import *
 
 urlpatterns = [
     path('', user_list_view, name='frontend'),
+    path('<int:id>/', get_user, name="get_user")
 ]
 
 # path('whc/', get_worker_has_customer_all, name='worker_customer_all'),

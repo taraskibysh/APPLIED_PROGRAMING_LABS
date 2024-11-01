@@ -1,13 +1,93 @@
-<!doctype html>
-<html lang="en">
+<!--<!DOCTYPE html>-->
+<!--<html lang="uk">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Список Користувачів</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <h1>Список Користувачів</h1>-->
+<!--    <table border="1">-->
+<!--        <thead>-->
+<!--            <tr>-->
+<!--                <th>ID</th>-->
+<!--                <th>Ім'я</th>-->
+<!--                <th>Прізвище</th>-->
+<!--                <th>Дата народження</th>-->
+<!--                <th>Номер телефону</th>-->
+<!--                <th>Стать</th>-->
+<!--            </tr>-->
+<!--        </thead>-->
+<!--        <tbody>-->
+<!--            {% for user in users %}-->
+<!--            <tr>-->
+<!--                <td>{{ user.id }}</td>-->
+<!--                <td>{{ user.name }}</td>-->
+<!--                <td>{{ user.surname }}</td>-->
+<!--                <td>{{ user.date_of_birth }}</td>-->
+<!--                <td>{{ user.phone_number }}</td>-->
+<!--                <td>{{ user.gender }}</td> &lt;!&ndash; Поле статі &ndash;&gt;-->
+
+<!--            </td>-->
+<!--                <button onclick="window.location.href='/user/{{ user.id }}'">Перейти до профілю користувача</button>-->
+<!--            </tr>-->
+<!--            {% empty %}-->
+<!--            <tr>-->
+<!--                <td colspan="6">Користувачі не знайдені.</td>-->
+<!--            </tr>-->
+<!--            {% endfor %}-->
+
+<!--        </tbody>-->
+<!--    </table>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+<!DOCTYPE html>
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список Користувачів</title>
+    <style>
+        .big-button {
+            width: 100%;              /* Кнопка займає всю ширину */
+            padding: 20px;            /* Внутрішні відступи для великого розміру */
+            font-size: 18px;          /* Збільшення тексту */
+            text-align: left;         /* Текст зліва */
+            border: none;             /* Прибираємо рамку */
+            background-color: #f0f0f0; /* Колір фону */
+            cursor: pointer;
+        }
+        .big-button:hover {
+            background-color: #e0e0e0; /* Колір при наведенні */
+        }
+    </style>
 </head>
 <body>
-<h1>{{users}}</h1>
+    <h1>Список Користувачів</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID та Ім'я</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td colspan="2"> <!-- Об'єднує дві колонки в одну для великої кнопки -->
+                    <button class="big-button" onclick="window.location.href='/user/{{ user.id }}'">
+                        ID: {{ user.id }} - Ім'я: {{ user.name }}
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Користувачі не знайдені.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
