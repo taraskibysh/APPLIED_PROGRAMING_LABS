@@ -95,31 +95,65 @@ def create_user(request):
 
 
 
+# def change_user(request, id):
+#     url = f"{base_url}user/{id}/"
+#     form = CustomerForm()
+#
+#     response = requests.get(url, cookies=request.COOKIES)  # Використовуємо кукі для аутентифікації
+#
+#     if response.status_code == 200:
+#         user = response.json()
+#     else:
+#         user = []
+#         print(f"Помилка API: Статус {response.status_code}")
+#
+#
+#     # if request.method == 'POST':
+#     #         form = CustomerForm(request.POST)
+#     #         if form.is_valid():
+#     #             cleaned_data = form.cleaned_data
+#     #             cleaned_data['gender'] = cleaned_data['gender'].id
+#     #             put_response = requests.put(url, data=cleaned_data, cookies=request.COOKIES)
+#     #
+#     #             if put_response.status_code == 200:  # If successfully updated
+#     #                 return redirect('get_user', id)
+#     #             else:
+#     #                 form.add_error(None, "Error updating user via API")
+#     #         else:
+#     #             form.add_error(None, "Form data is invalid. Please check your input.")
+#
+#     return render(request, 'frontend/change_form.html', {'user': user})
+
+
 def change_user(request, id):
     url = f"{base_url}user/{id}/"
-    form = CustomerForm()
-
-    response = requests.get(url, cookies=request.COOKIES)  # Використовуємо кукі для аутентифікації
+    response = requests.get(url, cookies=request.COOKIES)  # Отримуємо дані користувача
 
     if response.status_code == 200:
-        user = response.json()
+        user_data = response.json()  # Декодуємо дані з JSON
+        form = CustomerForm(initial=user_data)  # Ініціалізуємо форму з даними користувача
     else:
-        user = []
+        form = CustomerForm()  # Якщо не вдалося отримати дані, просто створюємо нову форму
         print(f"Помилка API: Статус {response.status_code}")
 
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            cleaned_data['gender'] = cleaned_data['gender'].id
+            csrf_token = request.COOKIES.get('csrftoken')
+            headers = {
+                'X-CSRFToken': csrf_token  # Додаємо CSRF-токен до заголовків
+            }
 
-    # if request.method == 'POST':
-    #         form = CustomerForm(request.POST)
-    #         if form.is_valid():
-    #             cleaned_data = form.cleaned_data
-    #             cleaned_data['gender'] = cleaned_data['gender'].id
-    #             put_response = requests.put(url, data=cleaned_data, cookies=request.COOKIES)
-    #
-    #             if put_response.status_code == 200:  # If successfully updated
-    #                 return redirect('get_user', id)
-    #             else:
-    #                 form.add_error(None, "Error updating user via API")
-    #         else:
-    #             form.add_error(None, "Form data is invalid. Please check your input.")
+            put_response = requests.put(url, data=cleaned_data, cookies=request.COOKIES, headers=headers)
 
-    return render(request, 'frontend/change_form.html', {'user': user})
+            print(f" status :{put_response.status_code}")
+            if put_response.status_code == 200:  # Якщо успішно оновлено
+                return redirect('get_user', id)
+            else:
+                form.add_error(None, "Помилка при редагуванні користувача через API")
+        else:
+            form.add_error(None, "Дані форми некоректні. Будь ласка, перевірте введені дані.")
+
+    return render(request, 'frontend/change_form.html', {'form': form, 'user': user_data})

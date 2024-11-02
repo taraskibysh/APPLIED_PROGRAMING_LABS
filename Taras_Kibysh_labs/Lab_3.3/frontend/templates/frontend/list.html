@@ -61,7 +61,21 @@
             cursor: pointer;
         }
         .big-button:hover {
-            background-color: #e0e0e0; /* Колір при наведенні */
+            background-color: #68489f; /* Колір при наведенні */
+        }
+    </style>
+    <style>
+        .create-button {
+            width: 100%;              /* Кнопка займає всю ширину */
+            padding: 20px;            /* Внутрішні відступи для великого розміру */
+            font-size: 24px;          /* Збільшення тексту */
+            text-align: center;         /* Текст зліва */
+            border: none;             /* Прибираємо рамку */
+            background-color: #455fbb; /* Колір фону */
+            cursor: pointer;
+        }
+        .create-button:hover {
+            background-color: #536bb8; /* Колір при наведенні */
         }
     </style>
 </head>
@@ -87,6 +101,14 @@
                 <td colspan="2">Користувачі не знайдені.</td>
             </tr>
             {% endfor %}
+
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <form method="GET" action="{% url 'create_user'%}">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <button class="create-button" type="submit">Create</button>
+            </form>
+        </div>
         </tbody>
 
     </table>

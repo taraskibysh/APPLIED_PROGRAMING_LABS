@@ -19,5 +19,9 @@
         {% csrf_token %}
         <button type="submit">Delete</button>
     </form>
+
+    <button onclick="window.location.href='/site/change/{{ user.id }}/'">
+                        change
+                    </button>
 </body>
 </html>
