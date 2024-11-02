@@ -1,7 +1,10 @@
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
-from django.shortcuts import redirect
+
+from openid.extensions.draft.pape5 import Request
+
+from .forms import CustomerForm
 
 # Create your views here.
 
@@ -49,19 +52,74 @@ def get_user(request, id):
 
 def delete_user(request, id):
     url = f"{base_url}user/{id}/"
-    response = requests.delete(url, cookies=request.COOKIES)
-    print(F" problem {response.content}")
+    csrf_token = request.COOKIES.get('csrftoken')  # Отримуємо CSRF-токен з cookies
+
+    headers = {
+        'X-CSRFToken': csrf_token  # Додаємо CSRF-токен до заголовків
+    }
+
+    # Додаємо заголовки до запиту
+    response = requests.delete(url, headers=headers, cookies=request.COOKIES)
+    print(F"problem {response.content}")
 
     # Проверка, был ли запрос успешным
     if response.status_code == 204:
-        # Если успешно, перенаправляем на список пользователей
-        return redirect('user_list_view')  # Здесь укажите имя вашего URL для списка пользователей
+        # Якщо успішно, перенаправляємо на список користувачів
+        return redirect('user_list_view')
     else:
-        # Обработка ошибок (например, вывод сообщения об ошибке)
+        print(f"{response.content} status: + {response.status_code}")
+        # Обробка помилок
         return redirect('user_list_view')  # Укажите вашу страницу ошибок или другую логику
 
 
+def create_user(request):
+    url = f"{base_url}user/"
+    form = CustomerForm(None)
+
+    if request.method == 'POST':
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            cleaned_data['gender'] = cleaned_data['gender'].id
+            response = requests.post(url, data=cleaned_data)
+            if response.status_code == 201:  # Якщо успішно створено
+                return redirect('user_list_view')
+            else:
+                form.add_error(None, "Помилка при створенні користувача через API")
+        else:
+            form.add_error(None, "Дані форми некоректні. Будь ласка, перевірте введені дані.")
+
+    context = {'form': form}
+    print("hello world")
+    return render(request, 'frontend/create_form.html', context)
 
 
 
+def change_user(request, id):
+    url = f"{base_url}user/{id}/"
+    form = CustomerForm()
 
+    response = requests.get(url, cookies=request.COOKIES)  # Використовуємо кукі для аутентифікації
+
+    if response.status_code == 200:
+        user = response.json()
+    else:
+        user = []
+        print(f"Помилка API: Статус {response.status_code}")
+
+
+    # if request.method == 'POST':
+    #         form = CustomerForm(request.POST)
+    #         if form.is_valid():
+    #             cleaned_data = form.cleaned_data
+    #             cleaned_data['gender'] = cleaned_data['gender'].id
+    #             put_response = requests.put(url, data=cleaned_data, cookies=request.COOKIES)
+    #
+    #             if put_response.status_code == 200:  # If successfully updated
+    #                 return redirect('get_user', id)
+    #             else:
+    #                 form.add_error(None, "Error updating user via API")
+    #         else:
+    #             form.add_error(None, "Form data is invalid. Please check your input.")
+
+    return render(request, 'frontend/change_form.html', {'user': user})

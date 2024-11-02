@@ -6,7 +6,9 @@ from .views import *
 urlpatterns = [
     path('', user_list_view, name='user_list_view'),
     path('<int:id>/', get_user, name="get_user"),
-    path('delete/<int:id>/', delete_user, name="delete_user")
+    path('delete/<int:id>/', delete_user, name="delete_user"),
+    path('create/', create_user, name="create_user"),
+    path('change/<int:id>/', change_user, name="change_user"),
 ]
 
 # path('whc/', get_worker_has_customer_all, name='worker_customer_all'),

@@ -5,13 +5,19 @@
     <title>{{ user.name }}</title>
 </head>
 <body>
-<h1>ID: {{ user.id }}</h1>
-<p>Ім'я: {{ user.name }}</p>
-<p>Прізвище: {{ user.surname }}</p>
-<p>Дата: {{ user.date_of_birth }}</p>
-<p>Номер телефону: {{ user.phone_number }}</p>
-<p>Стать: {{ user.gender }}</p>
+    {% csrf_token %}
+    <h1>ID: {{ user.id }}</h1>
+    <p>Ім'я: {{ user.name }}</p>
+    <p>Прізвище: {{ user.surname }}</p>
+    <p>Дата: {{ user.date_of_birth }}</p>
+    <p>Номер телефону: {{ user.phone_number }}</p>
+    <p>Стать: {{ user.gender }}</p>
 
-<button onclick="window.location.href='{% url 'delete_user' user.id %}'"> Delete </button>
+
+
+    <form method="POST" action="{% url 'delete_user' user.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
 </body>
 </html>
