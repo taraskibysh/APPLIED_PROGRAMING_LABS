@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',  # Required for allauth
     'rest_framework',
     'rest_framework.authtoken',
-    'playground',
     'company',
     'API',
     'allauth',
