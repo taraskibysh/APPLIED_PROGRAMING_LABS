@@ -3,8 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
-from company.models import WorkerHasCustomerProfile, Worker, CustomerProfile, CustomerInsuranceInfo, ItemInsurance, \
-    CustomerHealthInsurance
+from company.models import *
 from .repositories import UserRepository, WorkerHasCustomerRepository, CustomerItemInsuranceRepository
 from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer, \
     ItemInsuranceSerializer, CustomerItemSerializer, CustomerHealthSerializer
