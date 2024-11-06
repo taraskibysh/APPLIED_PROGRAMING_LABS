@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ artist.artist_name }}</title>
+</head>
+<body>
+
+
+    <h1>{{ artist.artist_name }}</h1>
+
+
+      {% csrf_token %}
+    <h1>ID: {{ artist.id }}</h1>
+    <p>Name: {{ artist.artist_name }}</p>
+    <p>Year of creation: {{ artist.year_of_creation }}</p>
+    <p>country: {{ artist.country }}</p>
+
+    <form method="POST" action="{% url 'delete_artist' artist.id %}">
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+    </form>
+
+
+</body>
+</html>
