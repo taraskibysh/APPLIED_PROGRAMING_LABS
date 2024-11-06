@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Change User</title>
+</head>
+<body>
+    <h1>Change User: {{ user.name }}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Відображаємо форму -->
+        <button type="submit">Update</button>
+    </form>
+</body>
+</html>

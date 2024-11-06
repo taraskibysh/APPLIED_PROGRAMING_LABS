@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список Артистів</title>
+    <style>
+        .big-button {
+            width: 100%;              /* Кнопка займає всю ширину */
+            padding: 20px;            /* Внутрішні відступи для великого розміру */
+            font-size: 18px;          /* Збільшення тексту */
+            text-align: left;         /* Текст зліва */
+            border: none;             /* Прибираємо рамку */
+            background-color: #f0f0f0; /* Колір фону */
+            cursor: pointer;
+        }
+        .big-button:hover {
+            background-color: #68489f; /* Колір при наведенні */
+        }
+    </style>
+</head>
+<body>
+    <h1>Список Артистів</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID та Ім'я</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for artist in artists %}
+            <tr>
+                <td colspan="2"> <!-- Об'єднує дві колонки в одну для великої кнопки -->
+                    <button class="big-button" onclick="window.location.href='/site/artist/{{ artist.id }}/'">
+                        ID: {{ artist.id }} - Ім'я: {{ artist.artist_name }}
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">артисти не знайдені.</td>
+            </tr>
+            {% endfor %}
+
+
+        </tbody>
+
+    </table>
+</body>
+</html>

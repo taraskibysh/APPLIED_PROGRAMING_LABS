@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список Користувачів</title>
+    <style>
+        .big-button {
+            width: 100%;              /* Кнопка займає всю ширину */
+            padding: 20px;            /* Внутрішні відступи для великого розміру */
+            font-size: 18px;          /* Збільшення тексту */
+            text-align: left;         /* Текст зліва */
+            border: none;             /* Прибираємо рамку */
+            background-color: #f0f0f0; /* Колір фону */
+            cursor: pointer;
+        }
+        .big-button:hover {
+            background-color: #68489f; /* Колір при наведенні */
+        }
+    </style>
+    <style>
+        .create-button {
+            width: 100%;              /* Кнопка займає всю ширину */
+            padding: 20px;            /* Внутрішні відступи для великого розміру */
+            font-size: 24px;          /* Збільшення тексту */
+            text-align: center;         /* Текст зліва */
+            border: none;             /* Прибираємо рамку */
+            background-color: #455fbb; /* Колір фону */
+            cursor: pointer;
+        }
+        .create-button:hover {
+            background-color: #536bb8; /* Колір при наведенні */
+        }
+    </style>
+</head>
+<body>
+    <h1>Список Користувачів</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID та Ім'я</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td colspan="2"> <!-- Об'єднує дві колонки в одну для великої кнопки -->
+                    <button class="big-button" onclick="window.location.href='/site/{{ user.id }}/'">
+                        ID: {{ user.id }} - Ім'я: {{ user.name }}
+                    </button>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Користувачі не знайдені.</td>
+            </tr>
+            {% endfor %}
+
+        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+            <form method="GET" action="{% url 'create_user'%}">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <button class="create-button" type="submit">Create</button>
+            </form>
+        </div>
+        </tbody>
+
+    </table>
+</body>
+</html>
