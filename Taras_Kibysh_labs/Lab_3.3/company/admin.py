@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomerProfile, Worker, WorkerHasCustomerProfile, CustomerInsuranceInfo
+from .models import *
 
 
 class CustomerProfileAdmin(admin.ModelAdmin):
@@ -40,6 +40,14 @@ admin.site.register(CustomerProfile, CustomerProfileAdmin )
 admin.site.register(Worker, WorkerAdmin)
 admin.site.register(WorkerHasCustomerProfile, WorkerHasCustomerProfileAdmin)
 admin.site.register(CustomerInsuranceInfo, CustomerInsuranceInfoAdmin)
+admin.site.register(Gender)
+admin.site.register(Status)
+admin.site.register(ItemInsurance)
+admin.site.register(CustomerItemInsurance)
+admin.site.register(TypeOfInsurance)
+admin.site.register(Checklist)
+admin.site.register(CustomerHealthInsurance)
+
 
 
 # Register your models here.
