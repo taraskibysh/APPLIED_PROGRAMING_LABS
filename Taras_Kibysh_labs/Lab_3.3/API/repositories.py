@@ -5,6 +5,69 @@ from rest_framework.response import Response
 from company.models import *
 from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer
 from rest_framework import generics, status
+from django.http import QueryDict
+from rest_framework.response import Response
+from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg
+from django.db.models.functions import Now, ExtractYear, Concat
+from datetime import datetime
+class AggregatetedRepository:
+
+    def get_avarage_salary(self):
+        result = (
+            Worker.objects.values("position")
+            .annotate(average=Avg("salary")* F("position"))
+            .order_by("average")
+        )
+        return result
+
+
+    def get_age_information(self):
+        current_year = datetime.now().year  # Поточний рік
+
+        result = (
+            CustomerProfile.objects.annotate(
+                age_years=current_year - ExtractYear(F('date_of_birth'))  # Обчислюємо вік
+            )
+            .annotate(
+                age_group=Case(
+                    When(age_years__lt=20, then=Value('0-20')),
+                    When(age_years__gte=20, age_years__lt=40, then=Value('20-40')),
+                    When(age_years__gte=40, age_years__lt=60, then=Value('40-60')),
+                    default=Value('Other'),
+                    output_field=CharField(),  # Виправлення на CharField
+                )
+            )
+            .values('age_group')  # Групуємо за категорією віку
+            .annotate(
+                male_count=Count('id', filter=Q(gender__gender_name='male')),  # Підрахунок чоловіків
+                female_count=Count('id', filter=Q(gender__gender_name='female'))  # Підрахунок жінок
+            )
+            .order_by('age_group')  # Сортування за категорією
+        )
+        return result
+
+
+    def get_status_statistics(self):
+        result = (
+            CustomerInsuranceInfo.objects
+            .values('status')  # Групуємо за статусом
+            .annotate(count=Count('status'))  # Підрахунок кількості за статусом
+            .order_by('-count')  # Сортуємо за кількістю у порядку спадання
+        )
+
+        return result
+
+    def served_people_capacity_by_worker(self):
+        result = (
+            WorkerHasCustomerProfile.objects
+            .values("worker")  # Вибираємо лише "worker" (не виводимо id)
+            .annotate(
+                worker_name=Concat(F('worker__name'), Value(' '), F('worker__surname'))  # Створюємо ім'я + прізвище
+            )
+            .annotate(count=Count("customer_profile"))  # Підраховуємо кількість
+            .order_by('-count')  # Сортуємо за кількістю
+        )
+        return result
 
 
 
@@ -112,3 +175,69 @@ class WorkerHasCustomerRepository:
     def create(self, data):
         return WorkerHasCustomerProfile(**data)
 
+from django.http import QueryDict
+from rest_framework.response import Response
+from company.models import *
+from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer
+from rest_framework import generics, status
+from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg
+from django.db.models.functions import Now, ExtractYear, Concat
+from datetime import datetime
+class AggregatetedRepository:
+
+    def get_avarage_salary(self):
+        result = (
+            Worker.objects.values("position")
+            .annotate(average=Avg("salary")* F("position"))
+            .order_by("average")
+        )
+        return result
+
+
+    def get_age_information(self):
+        current_year = datetime.now().year  # Поточний рік
+
+        result = (
+            CustomerProfile.objects.annotate(
+                age_years=current_year - ExtractYear(F('date_of_birth'))  # Обчислюємо вік
+            )
+            .annotate(
+                age_group=Case(
+                    When(age_years__lt=20, then=Value('0-20')),
+                    When(age_years__gte=20, age_years__lt=40, then=Value('20-40')),
+                    When(age_years__gte=40, age_years__lt=60, then=Value('40-60')),
+                    default=Value('Other'),
+                    output_field=CharField(),  # Виправлення на CharField
+                )
+            )
+            .values('age_group')  # Групуємо за категорією віку
+            .annotate(
+                male_count=Count('id', filter=Q(gender__gender_name='male')),  # Підрахунок чоловіків
+                female_count=Count('id', filter=Q(gender__gender_name='female'))  # Підрахунок жінок
+            )
+            .order_by('age_group')  # Сортування за категорією
+        )
+        return result
+
+
+    def get_status_statistics(self):
+        result = (
+            CustomerInsuranceInfo.objects
+            .values('status')  # Групуємо за статусом
+            .annotate(count=Count('status'))  # Підрахунок кількості за статусом
+            .order_by('-count')  # Сортуємо за кількістю у порядку спадання
+        )
+
+        return result
+
+    def served_people_capacity_by_worker(self):
+        result = (
+            WorkerHasCustomerProfile.objects
+            .values("worker")  # Вибираємо лише "worker" (не виводимо id)
+            .annotate(
+                worker_name=Concat(F('worker__name'), Value(' '), F('worker__surname'))  # Створюємо ім'я + прізвище
+            )
+            .annotate(count=Count("customer_profile"))  # Підраховуємо кількість
+            .order_by('-count')  # Сортуємо за кількістю
+        )
+        return result
