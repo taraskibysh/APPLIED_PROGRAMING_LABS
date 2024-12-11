@@ -43,4 +43,5 @@ class CustomerItemSerializer(serializers.ModelSerializer):
     item_insurance = serializers.PrimaryKeyRelatedField(queryset=ItemInsurance.objects.all())
     class Meta:
         model = CustomerItemInsurance
-        fields = ['customer_insuranceinfo', 'item_insurance', 'price_of_item_insurance']
+        # fields = ['customer_insuranceinfo', 'item_insurance', 'price_of_item_insurance']
+        fields = '__all__'
