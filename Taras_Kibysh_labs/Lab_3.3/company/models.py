@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 
@@ -110,6 +111,7 @@ class CustomerHealthInsurance(models.Model):
     checklist = models.ForeignKey('Checklist', models.DO_NOTHING, blank=True, null=True)
     name_of_the_hospital = models.CharField(max_length=45, blank=True, null=True)
     price_of_health_insurance = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    creation_date = models.DateField(default=timezone.now, blank=True, null=True)
 
     class Meta:
         db_table = 'customer_health_insurance'
@@ -130,6 +132,7 @@ class CustomerItemInsurance(models.Model):
     customer_insuranceinfo = models.ForeignKey('CustomerInsuranceInfo', models.DO_NOTHING, null=False, primary_key= True)  # The composite primary key (customer_insuranceinfo_id, item_insurance_id) found, that is not supported. The first column is selected.
     item_insurance = models.ForeignKey('ItemInsurance', models.DO_NOTHING)
     price_of_item_insurance = models.DecimalField(max_digits=10, decimal_places=2)
+    creation_date = models.DateField(default=timezone.now, blank=True, null=True)
 
     class Meta:
         db_table = 'customer_item_insurance'
