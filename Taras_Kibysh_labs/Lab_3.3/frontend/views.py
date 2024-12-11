@@ -1,6 +1,8 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 import requests
+from django.shortcuts import render
+from API.repositories import AggregatetedRepository
 
 
 from .forms import CustomerForm
@@ -114,3 +116,29 @@ def change_user(request, id):
             form.add_error(None, "Дані форми некоректні. Будь ласка, перевірте введені дані.")
 
     return render(request, 'frontend/change_form.html', {'form': form, 'user': user_data})
+
+
+
+# views.py
+  # Імпортуємо репозиторій для отримання даних
+
+def dashboard(request):
+    # Створюємо екземпляр репозиторія
+    repo = AggregatetedRepository()
+
+    # Отримуємо дані для дашборду
+    average_salary = repo.get_avarage_salary()
+    age_information = repo.get_age_information()
+    status_statistics = repo.get_status_statistics()
+    served_capacity = repo.served_people_capacity_by_worker()
+
+    # Підготовка контексту для шаблону
+    context = {
+        'average_salary': average_salary,
+        'age_information': age_information,
+        'status_statistics': status_statistics,
+        'served_capacity': served_capacity,
+    }
+
+    # Повертаємо рендеринг шаблону з контекстом
+    return render(request, 'dashboard.html', context)

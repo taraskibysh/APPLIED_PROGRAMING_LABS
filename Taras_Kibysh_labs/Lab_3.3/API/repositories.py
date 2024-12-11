@@ -1,5 +1,4 @@
 from operator import truediv
-
 from django.http import QueryDict
 from rest_framework.response import Response
 from company.models import *
@@ -15,8 +14,8 @@ class AggregatetedRepository:
     def get_avarage_salary(self):
         result = (
             Worker.objects.values("position")
-            .annotate(average=Avg("salary")* F("position"))
-            .order_by("average")
+            .annotate(average_salary=Avg("salary"))  # Середня зарплата для кожної позиції
+            .order_by("average_salary")  # Сортування за середньою зарплатою
         )
         return result
 

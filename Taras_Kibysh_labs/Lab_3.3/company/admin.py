@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import CustomerProfile, Worker, WorkerHasCustomerProfile, CustomerInsuranceInfo
+from .models import CustomerProfile, Worker, WorkerHasCustomerProfile, CustomerInsuranceInfo, CustomerHealthInsurance, \
+    Status, TypeOfInsurance, Gender, CustomerItemInsurance
 
 
 class CustomerProfileAdmin(admin.ModelAdmin):
@@ -36,6 +37,22 @@ class CustomerInsuranceInfoAdmin(admin.ModelAdmin):
     def status_def(self, obj):
         return obj.status.status
 
+
+
+class CustomerHealthInsuranceAdmin(admin.ModelAdmin):
+    list_display = ('id', 'checklist', 'price_of_health_insurance', 'creation_date')
+
+class CustomerItemInsuranceAdmin(admin.ModelAdmin):
+    list_display = ( 'customer_insuranceinfo', 'item_insurance', 'price_of_item_insurance', 'creation_date')
+
+
+
+admin.site.register(Status)
+admin.site.register(TypeOfInsurance)
+admin.site.register(Gender)
+
+admin.site.register(CustomerItemInsurance, CustomerItemInsuranceAdmin)
+admin.site.register(CustomerHealthInsurance, CustomerHealthInsuranceAdmin)
 admin.site.register(CustomerProfile, CustomerProfileAdmin )
 admin.site.register(Worker, WorkerAdmin)
 admin.site.register(WorkerHasCustomerProfile, WorkerHasCustomerProfileAdmin)
