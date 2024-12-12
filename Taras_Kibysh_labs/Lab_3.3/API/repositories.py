@@ -173,7 +173,7 @@ class AggregatetedRepository:
     def get_status_statistics(self):
         result = (
             CustomerInsuranceInfo.objects
-            .values('status')  # Групуємо за статусом
+            .values('status__status')  # Групуємо за статусом
             .annotate(count=Count('status'))  # Підрахунок кількості за статусом
             .order_by('-count')  # Сортуємо за кількістю у порядку спадання
         )

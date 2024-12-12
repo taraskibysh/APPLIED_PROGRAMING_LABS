@@ -63,5 +63,41 @@
         {% endfor %}
         <button type="submit">Застосувати</button>
     </form>
+
+    <div>
+        {{ graph_html4|safe }}
+</div>
+<form method="get">
+    <h3>Вибір статусів</h3>
+            {% for status in statuses %}
+        <label>
+            <input type="checkbox" name="statuses" value="{{ status }}"
+                   {% if status in selected_statuses %} checked {% endif %}>
+            {{ status }}
+        </label>
+    <br>
+{% endfor %}
+    <button type="submit">Застосувати</button>
+</form>
+
+<h1>Served People Capacity by Worker</h1>
+
+    <div>
+        <form method="get">
+            <label for="workers">Select Workers:</label>
+            <select id="workers" name="workers" multiple>
+                {% for worker in workers %}
+                    <option value="{{ worker }}" {% if worker in selected_workers %}selected{% endif %}>{{ worker }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Update Chart</button>
+        </form>
+    </div>
+
+    <div>
+        <!-- Display the generated chart -->
+        {{ graph_html5|safe }}
+    </div>
+
 </body>
 </html>

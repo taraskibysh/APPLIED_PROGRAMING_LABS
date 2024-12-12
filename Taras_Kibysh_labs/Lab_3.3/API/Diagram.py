@@ -101,7 +101,7 @@ class Diagrams:
         filtered_data = age_data[
             (age_data['Gender'].isin(selected_genders)) &
             (age_data['Age Group'].isin(selected_age_groups))
-            ]
+        ]
 
         # Побудова третьої діаграми
         fig3 = px.pie(
@@ -121,39 +121,84 @@ class Diagrams:
         return fig3.to_html(full_html=False)
 
     def fourth_chart(self, request):
-        # Отримуємо дані зі статистикою по статусам
+        # Отримуємо дані зі статистикою по статусах
         status_data = pd.DataFrame(self.repo.get_status_statistics())
 
         # Перевіряємо наявність даних
         if not status_data.empty:
-            statuses = status_data['status'].tolist()
+            statuses = status_data['status__status'].tolist()
             counts = status_data['count'].tolist()
+
+            # Отримання фільтрів від користувача (статуси)
+            selected_statuses = request.GET.getlist('statuses', statuses)
+
+            # Фільтрація даних за вибраними статусами
+            filtered_data = status_data[status_data['status__status'].isin(selected_statuses)]
 
             # Побудова діаграми
             fig = go.Figure()
-            fig.add_trace(go.Bar(
-                x=statuses,
-                y=counts,
+            fig.add_trace(go.Pie(
+                labels=filtered_data['status__status'],  # Стовпець зі статусами
+                values=filtered_data['count'],  # Стовпець з кількістю клієнтів
                 name='Кількість за статусом',
-                marker=dict(color='rgba(55, 128, 191, 0.7)', line=dict(color='rgba(55, 128, 191, 1.0)', width=2))
+                marker=dict(colors=['rgba(55, 128, 191, 0.7)', 'rgba(55, 128, 191, 1.0)'])  # Можна змінити кольори
             ))
             fig.update_layout(
                 title='Статистика за статусом клієнтів',
-                xaxis=dict(title='Статус'),
-                yaxis=dict(title='Кількість клієнтів'),
+                plot_bgcolor='rgb(240, 240, 240)',  # Зміна кольору фону діаграми
+                paper_bgcolor='rgb(255, 255, 255)',  # Зміна кольору фону сторінки
+                font=dict(family='Arial, sans-serif', size=12, color='rgb(0, 0, 0)')  # Зміна шрифтів
             )
             return fig.to_html(full_html=False)
+
+    def fifth_chart(self, request):
+        # Fetch data from the repository
+        worker_data = pd.DataFrame(self.repo.served_people_capacity_by_worker())
+        print(worker_data)
+
+        # Rename columns for easier access
+        worker_data = worker_data.rename(columns={
+            'worker_name': 'Worker Name',
+            'count': 'People Count'
+        })
+
+        # Get user-selected filters (if any)
+        selected_workers = request.GET.getlist('workers', worker_data['Worker Name'].unique().tolist())
+
+        # Filter data based on selected workers
+        filtered_data = worker_data[worker_data['Worker Name'].isin(selected_workers)]
+
+        # Build chart for worker served people capacity
+        fig = go.Figure()
+        fig.add_trace(go.Bar(
+            x=filtered_data['Worker Name'],
+            y=filtered_data['People Count'],
+            name='People Served',
+            marker=dict(color='rgba(55, 128, 191, 0.7)', line=dict(color='rgba(55, 128, 191, 1.0)', width=2))
+        ))
+        fig.update_layout(
+            title='People Served by Workers',
+            xaxis=dict(title='Worker Name'),
+            yaxis=dict(title='People Count'),
+            plot_bgcolor='rgb(240, 240, 240)',  # Background color of the plot area
+            paper_bgcolor='rgb(255, 255, 255)',  # Background color of the whole page
+            font=dict(family='Arial, sans-serif', size=12, color='rgb(0, 0, 0)')  # Font settings
+        )
+        return fig.to_html(full_html=False)
+
 
 def combined_charts(request):
     repo = AggregatetedRepository()
     diagrams = Diagrams(repo)
 
-    # Створення всіх діаграм
+    # Create all the charts
     graph_html1 = diagrams.first_chart(request)
     graph_html2 = diagrams.second_chart(request)
     graph_html3 = diagrams.third_chart(request)
+    graph_html4 = diagrams.fourth_chart(request)
+    graph_html5 = diagrams.fifth_chart(request)
 
-    # Отримання фільтрів для професій та вікових груп
+    # Get filters for positions and age groups
     salary_data = pd.DataFrame(repo.get_avarage_salary())
     all_positions = salary_data['position'].tolist()
 
@@ -164,15 +209,32 @@ def combined_charts(request):
     selected_genders = request.GET.getlist('genders', ['Male Count', 'Female Count'])
     selected_age_groups = request.GET.getlist('age_groups', age_groups)
 
-    # Передача даних у шаблон
+    status_statiscic = pd.DataFrame(repo.get_status_statistics())
+    all_status = status_statiscic['status__status'].tolist()
+    selected_statuses = request.GET.getlist('statuses', all_status)  # Default to all statuses
+    print("Selected statuses:", selected_statuses)
+
+    worker_data = pd.DataFrame(repo.served_people_capacity_by_worker())
+    all_workers = worker_data['worker_name'].tolist()
+
+    selected_workers = request.GET.getlist('workers', all_workers)
+
+    # Pass the selected statuses to the template
     return render(request, 'dashboard/v1.html', {
         'graph_html1': graph_html1,
         'graph_html2': graph_html2,
         'graph_html3': graph_html3,
+        'graph_html4': graph_html4,
+        'graph_html5': graph_html5,
         'positions': all_positions,
         'selected_positions': selected_positions,
         'age_groups': age_groups,
         'genders': ['Male Count', 'Female Count'],
         'selected_genders': selected_genders,
-        'selected_age_groups': selected_age_groups
+        'selected_age_groups': selected_age_groups,
+        'statuses': all_status,  # List of all possible statuses
+        'selected_statuses': selected_statuses,
+        'workers': all_workers,
+        'selected_workers': selected_workers
+        # List of selected statuses
     })
