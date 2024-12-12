@@ -16,6 +16,7 @@ urlpatterns = [
     path('whc/<int:f_id>,<int:s_id>/', WorkerHasCustomerProfileView.as_view(),name='worker_customer_profile_detail'),
     path('cii/', CustomerItemInsuranceView.as_view(), name='CustomerItemInsurance'),
     path('cii/<int:f_id>,<int:s_id>/', CustomerItemInsuranceView.as_view(),name='CustomerItemInsurance_details'),
+    path('dashdata/', DashboardDataView.as_view(), name='dash_data')
 ]
 
 # path('whc/', get_worker_has_customer_all, name='worker_customer_all'),

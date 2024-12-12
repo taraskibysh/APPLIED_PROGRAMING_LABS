@@ -9,64 +9,28 @@ from rest_framework.response import Response
 from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg
 from django.db.models.functions import Now, ExtractYear, Concat
 from datetime import datetime
-class AggregatetedRepository:
+from django.http import QueryDict
+from rest_framework.response import Response
+from company.models import *
+from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer
+from rest_framework import generics, status
+from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg, DecimalField
+from django.db.models.functions import Now, ExtractYear, Concat
+from datetime import datetime
+from collections import defaultdict
 
-    def get_avarage_salary(self):
-        result = (
-            Worker.objects.values("position")
-            .annotate(average_salary=Avg("salary"))  # Середня зарплата для кожної позиції
-            .order_by("average_salary")  # Сортування за середньою зарплатою
-        )
-        return result
+# Створення defaultdict з типом значення як список
+my_dict = defaultdict(list)
 
+# Додавання елементів
+my_dict['a'].append(1)
+my_dict['a'].append(2)
+my_dict['b'].append(3)
 
-    def get_age_information(self):
-        current_year = datetime.now().year  # Поточний рік
+print(my_dict)  # Виведе: defaultdict(<class 'list'>, {'a': [1, 2], 'b': [3]})
 
-        result = (
-            CustomerProfile.objects.annotate(
-                age_years=current_year - ExtractYear(F('date_of_birth'))  # Обчислюємо вік
-            )
-            .annotate(
-                age_group=Case(
-                    When(age_years__lt=20, then=Value('0-20')),
-                    When(age_years__gte=20, age_years__lt=40, then=Value('20-40')),
-                    When(age_years__gte=40, age_years__lt=60, then=Value('40-60')),
-                    default=Value('Other'),
-                    output_field=CharField(),  # Виправлення на CharField
-                )
-            )
-            .values('age_group')  # Групуємо за категорією віку
-            .annotate(
-                male_count=Count('id', filter=Q(gender__gender_name='male')),  # Підрахунок чоловіків
-                female_count=Count('id', filter=Q(gender__gender_name='female'))  # Підрахунок жінок
-            )
-            .order_by('age_group')  # Сортування за категорією
-        )
-        return result
-
-
-    def get_status_statistics(self):
-        result = (
-            CustomerInsuranceInfo.objects
-            .values('status')  # Групуємо за статусом
-            .annotate(count=Count('status'))  # Підрахунок кількості за статусом
-            .order_by('-count')  # Сортуємо за кількістю у порядку спадання
-        )
-
-        return result
-
-    def served_people_capacity_by_worker(self):
-        result = (
-            WorkerHasCustomerProfile.objects
-            .values("worker")  # Вибираємо лише "worker" (не виводимо id)
-            .annotate(
-                worker_name=Concat(F('worker__name'), Value(' '), F('worker__surname'))  # Створюємо ім'я + прізвище
-            )
-            .annotate(count=Count("customer_profile"))  # Підраховуємо кількість
-            .order_by('-count')  # Сортуємо за кількістю
-        )
-        return result
+# Якщо звернутися до відсутнього ключа, створюється порожній список
+print(my_dict['c'])  # Виведе: []
 
 
 
@@ -174,20 +138,19 @@ class WorkerHasCustomerRepository:
     def create(self, data):
         return WorkerHasCustomerProfile(**data)
 
-from django.http import QueryDict
-from rest_framework.response import Response
-from company.models import *
-from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer
-from rest_framework import generics, status
-from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg
-from django.db.models.functions import Now, ExtractYear, Concat
-from datetime import datetime
+
 class AggregatetedRepository:
 
     def get_avarage_salary(self):
         result = (
-            Worker.objects.values("position")
-            .annotate(average=Avg("salary")* F("position"))
+            Worker.objects
+            .values("position")
+            .annotate(
+                average=ExpressionWrapper(
+                    Avg("salary"),  # Явно вказуємо тип для 'position'
+                    output_field=DecimalField()  # Вказуємо результат як DecimalField
+                )
+            )
             .order_by("average")
         )
         return result
@@ -240,3 +203,40 @@ class AggregatetedRepository:
             .order_by('-count')  # Сортуємо за кількістю
         )
         return result
+
+    def capacity_of_insurance_by_year(self):
+        # Перший запит для `customer_item_insurance`
+        item_insurance_data = (
+            CustomerItemInsurance.objects
+            .values(year=ExtractYear('creation_date'))
+            .annotate(count=Count('customer_insuranceinfo_id'))
+            .order_by('year')
+        )
+
+        # Другий запит для `customer_health_insurance`
+        health_insurance_data = (
+            CustomerHealthInsurance.objects
+            .values(year=ExtractYear('creation_date'))
+            .annotate(count=Count('id'))
+            .order_by('year')
+        )
+
+        # Об'єднання результатів
+        combined_data = defaultdict(int)
+
+        # Додавання результатів для `customer_item_insurance`
+        for record in item_insurance_data:
+            combined_data[record['year']] += record['count']
+
+        # Додавання результатів для `customer_health_insurance`
+        for record in health_insurance_data:
+            combined_data[record['year']] += record['count']
+
+        # Підготовка фінального результату
+        final_result = [{'year': year, 'total_count': count} for year, count in combined_data.items()]
+
+        # Сортування за роком
+        final_result.sort(key=lambda x: x['year'])
+
+        # Виведення результатів
+        return final_result

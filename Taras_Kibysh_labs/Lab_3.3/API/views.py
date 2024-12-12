@@ -126,32 +126,23 @@ class CustomerItemInsuranceView(generics.GenericAPIView, CommonDoubleMixin):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    class DashboardDataView(APIView):
-        def get(self, request):
-            # Отримання даних з репозиторія
-            repo = AggregatetedRepository()
 
-            # Параметри для фільтрації (наприклад, за датами або іншими критеріями)
-            start_date = request.query_params.get('start_date', None)
-            end_date = request.query_params.get('end_date', None)
 
-            # Виклик функцій репозиторія
-            if start_date and end_date:
-                data = {
-                    "average_salary": repo.get_avarage_salary(),
-                    "age_information": repo.get_age_information(),
-                    "status_statistics": repo.get_status_statistics(),
-                    "served_capacity": repo.served_people_capacity_by_worker(),
-                }
-            else:
-                data = {
-                    "average_salary": repo.get_avarage_salary(),
-                    "age_information": repo.get_age_information(),
-                    "status_statistics": repo.get_status_statistics(),
-                    "served_capacity": repo.served_people_capacity_by_worker(),
-                }
+class DashboardDataView(APIView):
+    def getData(self, request):
+         # Отримання даних з репозиторія
+        repo = AggregatetedRepository()
 
-            return Response(data, status=status.HTTP_200_OK)
+        data = {
+            "average_salary": repo.get_avarage_salary(),
+            "age_information": repo.get_age_information(),
+            "status_statistics": repo.get_status_statistics(),
+            "served_capacity": repo.served_people_capacity_by_worker(),
+            "Insurance_count" : repo.capacity_of_insurance_by_year()
+        }
+
+
+        return Response(data, status=status.HTTP_200_OK)
 
 
 
