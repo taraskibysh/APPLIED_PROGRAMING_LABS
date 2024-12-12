@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'allauth.socialaccount',
-    'frontend'
+    'frontend',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig'
     # 'debug_toolbar'
 ]
 

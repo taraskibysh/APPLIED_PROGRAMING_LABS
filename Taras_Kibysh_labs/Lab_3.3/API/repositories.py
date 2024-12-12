@@ -19,18 +19,6 @@ from django.db.models.functions import Now, ExtractYear, Concat
 from datetime import datetime
 from collections import defaultdict
 
-# Створення defaultdict з типом значення як список
-my_dict = defaultdict(list)
-
-# Додавання елементів
-my_dict['a'].append(1)
-my_dict['a'].append(2)
-my_dict['b'].append(3)
-
-print(my_dict)  # Виведе: defaultdict(<class 'list'>, {'a': [1, 2], 'b': [3]})
-
-# Якщо звернутися до відсутнього ключа, створюється порожній список
-print(my_dict['c'])  # Виведе: []
 
 
 
@@ -240,3 +228,6 @@ class AggregatetedRepository:
 
         # Виведення результатів
         return final_result
+
+
+

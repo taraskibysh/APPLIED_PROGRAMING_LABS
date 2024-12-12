@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Діаграми з інтерактивними фільтрами</title>
+</head>
+<body>
+    <h1>Інтерактивні графіки</h1>
+
+    <!-- Перша діаграма -->
+    <h2>Середня зарплата за професією</h2>
+    <div>
+        {{ graph_html1|safe }}
+    </div>
+
+    <!-- Форма для вибору професій -->
+    <form method="get">
+        <h3>Оберіть професії:</h3>
+        {% for position in positions %}
+        <label>
+            <input type="checkbox" name="positions" value="{{ position }}"
+                   {% if position in selected_positions %}checked{% endif %}>
+            {{ position }}
+        </label>
+        <br>
+        {% endfor %}
+        <button type="submit">Застосувати</button>
+    </form>
+
+    <!-- Друга діаграма -->
+    <h2>Кількість страхувань за роками</h2>
+    <div>
+        {{ graph_html2|safe }}
+    </div>
+
+    <!-- Третя діаграма -->
+    <h2>Розподіл віку за статтю</h2>
+    <div>
+        {{ graph_html3|safe }}
+    </div>
+
+    <!-- Форма для фільтрації вікових груп і статей -->
+    <form method="get">
+        <h3>Оберіть статі:</h3>
+        {% for gender in genders %}
+        <label>
+            <input type="checkbox" name="genders" value="{{ gender }}"
+                   {% if gender in selected_genders %}checked{% endif %}>
+            {{ gender }}
+        </label>
+        <br>
+        {% endfor %}
+
+        <h3>Оберіть вікові групи:</h3>
+        {% for age_group in age_groups %}
+        <label>
+            <input type="checkbox" name="age_groups" value="{{ age_group }}"
+                   {% if age_group in selected_age_groups %}checked{% endif %}>
+            {{ age_group }}
+        </label>
+        <br>
+        {% endfor %}
+        <button type="submit">Застосувати</button>
+    </form>
+</body>
+</html>

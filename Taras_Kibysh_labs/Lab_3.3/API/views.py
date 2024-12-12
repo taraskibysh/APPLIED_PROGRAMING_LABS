@@ -7,6 +7,7 @@ from company.models import *
 from .repositories import *
 from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer, \
     ItemInsuranceSerializer, CustomerItemSerializer, CustomerHealthSerializer
+import pandas as pd
 
 
 class CommonMixin:
@@ -130,17 +131,23 @@ class CustomerItemInsuranceView(generics.GenericAPIView, CommonDoubleMixin):
 
 class DashboardDataView(APIView):
     def getData(self, request):
-         # Отримання даних з репозиторія
+        # Отримання даних з репозиторія
         repo = AggregatetedRepository()
 
-        data = {
-            "average_salary": repo.get_avarage_salary(),
-            "age_information": repo.get_age_information(),
-            "status_statistics": repo.get_status_statistics(),
-            "served_capacity": repo.served_people_capacity_by_worker(),
-            "Insurance_count" : repo.capacity_of_insurance_by_year()
-        }
+        # Отримання даних у форматі DataFrame
+        insurance_data = pd.DataFrame(repo.capacity_of_insurance_by_year())
+        # Ви можете перетворювати інші дані подібним чином:
+        # average_salary_data = pd.DataFrame(repo.get_avarage_salary())
+        # age_information_data = pd.DataFrame(repo.get_age_information())
+        # status_statistics_data = pd.DataFrame(repo.get_status_statistics())
 
+        # Перетворення DataFrame назад у список словників для передачі у відповідь
+        data = {
+            # "average_salary": average_salary_data.to_dict(orient='records'),
+            # "age_information": age_information_data.to_dict(orient='records'),
+            # "status_statistics": status_statistics_data.to_dict(orient='records'),
+            "Insurance_count": insurance_data.to_dict(orient='records')
+        }
 
         return Response(data, status=status.HTTP_200_OK)
 

@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from .Diagram import *
 
 urlpatterns = [
     path('user/', UserView.as_view(), name='customer'),  # Handles POST for creating and GET for fetching all users
@@ -16,7 +17,9 @@ urlpatterns = [
     path('whc/<int:f_id>,<int:s_id>/', WorkerHasCustomerProfileView.as_view(),name='worker_customer_profile_detail'),
     path('cii/', CustomerItemInsuranceView.as_view(), name='CustomerItemInsurance'),
     path('cii/<int:f_id>,<int:s_id>/', CustomerItemInsuranceView.as_view(),name='CustomerItemInsurance_details'),
-    path('dashdata/', DashboardDataView.as_view(), name='dash_data')
+    path('dashdata/', DashboardDataView.as_view(), name='dash_data'),
+    path('dashboard/', combined_charts, name='insurance_dashboard'),
+    # path('salary/',average_salary_chart, name='average_salary_chart'),
 ]
 
 # path('whc/', get_worker_has_customer_all, name='worker_customer_all'),
