@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Діаграми з інтерактивними фільтрами</title>
+    <!-- Include Bokeh JS and CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.bokeh.org/bokeh/release/bokeh-3.6.2.min.css">
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.6.2.min.js"></script>
 </head>
 <body>
     <h1>Інтерактивні графіки</h1>
@@ -11,7 +14,8 @@
     <!-- Перша діаграма -->
     <h2>Середня зарплата за професією</h2>
     <div>
-        {{ graph_html1|safe }}
+        {{ bokeh_script1|safe }}
+        {{ bokeh_div1|safe }}
     </div>
 
     <!-- Форма для вибору професій -->
@@ -31,13 +35,15 @@
     <!-- Друга діаграма -->
     <h2>Кількість страхувань за роками</h2>
     <div>
-        {{ graph_html2|safe }}
+        {{ bokeh_script2|safe }}
+        {{ bokeh_div2|safe }}
     </div>
 
     <!-- Третя діаграма -->
     <h2>Розподіл віку за статтю</h2>
     <div>
-        {{ graph_html3|safe }}
+        {{ bokeh_script3|safe }}
+        {{ bokeh_div3|safe }}
     </div>
 
     <!-- Форма для фільтрації вікових груп і статей -->
@@ -64,24 +70,27 @@
         <button type="submit">Застосувати</button>
     </form>
 
+    <!-- Четверта діаграма -->
     <div>
-        {{ graph_html4|safe }}
-</div>
-<form method="get">
-    <h3>Вибір статусів</h3>
-            {% for status in statuses %}
+        {{ bokeh_script4|safe }}
+        {{ bokeh_div4|safe }}
+    </div>
+
+    <form method="get">
+        <h3>Вибір статусів</h3>
+        {% for status in statuses %}
         <label>
             <input type="checkbox" name="statuses" value="{{ status }}"
                    {% if status in selected_statuses %} checked {% endif %}>
             {{ status }}
         </label>
-    <br>
-{% endfor %}
-    <button type="submit">Застосувати</button>
-</form>
+        <br>
+        {% endfor %}
+        <button type="submit">Застосувати</button>
+    </form>
 
-<h1>Served People Capacity by Worker</h1>
-
+    <!-- П'ята діаграма -->
+    <h1>Served People Capacity by Worker</h1>
     <div>
         <form method="get">
             <label for="workers">Select Workers:</label>
@@ -95,12 +104,13 @@
     </div>
 
     <div>
-        <!-- Display the generated chart -->
-        {{ graph_html5|safe }}
+        {{ bokeh_script5|safe }}
+        {{ bokeh_div5|safe }}
     </div>
+
     <div>
-        <!-- Display the generated chart -->
-        {{ graph_html6|safe }}
+        {{ bokeh_script6|safe }}
+        {{ bokeh_div6|safe }}
     </div>
 
 </body>

@@ -230,4 +230,13 @@ class AggregatetedRepository:
         return final_result
 
 
+    def get_price_of_item_and_price_of_insurance(self):
+        result = (
+            CustomerItemInsurance.objects
+            .select_related('item_insurance')  # Виконуємо JOIN за допомогою ForeignKey
+            .values( 'price_of_item_insurance', 'item_insurance__item_price')  # Вибираємо необхідні поля
+        )
+        return result
+
+
 

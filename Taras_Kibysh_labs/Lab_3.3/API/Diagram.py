@@ -186,6 +186,56 @@ class Diagrams:
         )
         return fig.to_html(full_html=False)
 
+    def sixth_chart(self, request):
+        # Fetch data from the repository
+        price_data = pd.DataFrame(self.repo.get_price_of_item_and_price_of_insurance())
+        print(price_data)
+
+        # Rename columns for easier access
+        price_data = price_data.rename(columns={
+            'price_of_item_insurance': 'Item Insurance Price',
+            'item_insurance__item_price': 'Item Price'
+        })
+
+        # Get user-selected filters (if any)
+        selected_items = request.GET.getlist('items', price_data['Item Insurance Price'].unique().tolist())
+
+        # Filter data based on selected items
+        filtered_data = price_data[price_data['Item Insurance Price'].isin(selected_items)]
+
+        # Build chart for item and insurance prices
+        fig = go.Figure()
+
+        # Create two bar traces for item price and insurance price
+        fig.add_trace(go.Bar(
+            x=filtered_data['Item Insurance Price'],
+            y=filtered_data['Item Price'],
+            name='Item Price',
+            marker=dict(color='rgba(55, 128, 191, 0.7)', line=dict(color='rgba(55, 128, 191, 1.0)', width=2))
+        ))
+
+        # Add another bar trace for insurance price
+        fig.add_trace(go.Bar(
+            x=filtered_data['Item Insurance Price'],
+            y=filtered_data['Item Insurance Price'],
+            name='Insurance Price',
+            marker=dict(color='rgba(255, 99, 132, 0.7)', line=dict(color='rgba(255, 99, 132, 1.0)', width=2))
+        ))
+
+        # Update layout for the chart
+        fig.update_layout(
+            title='Item Insurance vs Item Price',
+            xaxis=dict(title='Item Insurance Price'),
+            yaxis=dict(title='Price'),
+            barmode='group',  # Bars will be grouped
+            plot_bgcolor='rgb(240, 240, 240)',  # Background color of the plot area
+            paper_bgcolor='rgb(255, 255, 255)',  # Background color of the whole page
+            font=dict(family='Arial, sans-serif', size=12, color='rgb(0, 0, 0)')  # Font settings
+        )
+
+        # Return the graph in HTML format
+        return fig.to_html(full_html=False)
+
 
 def combined_charts(request):
     repo = AggregatetedRepository()
@@ -197,6 +247,7 @@ def combined_charts(request):
     graph_html3 = diagrams.third_chart(request)
     graph_html4 = diagrams.fourth_chart(request)
     graph_html5 = diagrams.fifth_chart(request)
+    graph_html6 = diagrams.sixth_chart(request)
 
     # Get filters for positions and age groups
     salary_data = pd.DataFrame(repo.get_avarage_salary())
@@ -226,6 +277,7 @@ def combined_charts(request):
         'graph_html3': graph_html3,
         'graph_html4': graph_html4,
         'graph_html5': graph_html5,
+        'graph_html6': graph_html6,
         'positions': all_positions,
         'selected_positions': selected_positions,
         'age_groups': age_groups,

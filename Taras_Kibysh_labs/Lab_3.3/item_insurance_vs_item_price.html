@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Bokeh Plot</title>
+    <style>
+      html, body {
+        box-sizing: border-box;
+        display: flow-root;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-3.6.2.min.js"></script>
+    <script type="text/javascript">
+        Bokeh.set_log_level("info");
+    </script>
+  </head>
+  <body>
+    <div id="a8b1236e-9809-4d8a-8534-0b9c30beeada" data-root-id="p1270" style="display: contents;"></div>
+  
+    <script type="application/json" id="b37d7198-46f6-4805-9f6f-ab4e385d1fb6">
+      {"5eb4adf5-a976-4b81-8599-f8955a77c839":{"version":"3.6.2","title":"Bokeh Application","roots":[{"type":"object","name":"Figure","id":"p1270","attributes":{"height":350,"x_range":{"type":"object","name":"FactorRange","id":"p1280","attributes":{"factors":["2000.0","250.0","3000.0","500.0","1000.0","400.0"]}},"y_range":{"type":"object","name":"DataRange1d","id":"p1272"},"x_scale":{"type":"object","name":"CategoricalScale","id":"p1281"},"y_scale":{"type":"object","name":"LinearScale","id":"p1282"},"title":{"type":"object","name":"Title","id":"p1273","attributes":{"text":"Item Insurance vs Item Price"}},"renderers":[{"type":"object","name":"GlyphRenderer","id":"p1312","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1267","attributes":{"selected":{"type":"object","name":"Selection","id":"p1268","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1269"},"data":{"type":"map","entries":[["index",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAEAAAACAAAAAwAAAAQAAAAFAAAA"},"shape":[6],"dtype":"int32","order":"little"}],["Item Insurance Price",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAABAn0AAAAAAAEBvQAAAAAAAcKdAAAAAAABAf0AAAAAAAECPQAAAAAAAAHlA"},"shape":[6],"dtype":"float64","order":"little"}],["Item Price",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAABMzUAAAAAAAIizQAAAAACAhA5BAAAAAABwl0AAAAAAAOCFQAAAAAAAiLNA"},"shape":[6],"dtype":"float64","order":"little"}],["color",{"type":"ndarray","array":["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b"],"shape":[6],"dtype":"object","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1313","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1314"}}},"glyph":{"type":"object","name":"VBar","id":"p1309","attributes":{"x":{"type":"field","field":"Item Insurance Price"},"width":{"type":"value","value":0.4},"top":{"type":"field","field":"Item Price"},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.6},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.6},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.6}}},"nonselection_glyph":{"type":"object","name":"VBar","id":"p1310","attributes":{"x":{"type":"field","field":"Item Insurance Price"},"width":{"type":"value","value":0.4},"top":{"type":"field","field":"Item Price"},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"VBar","id":"p1311","attributes":{"x":{"type":"field","field":"Item Insurance Price"},"width":{"type":"value","value":0.4},"top":{"type":"field","field":"Item Price"},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.2}}}}},{"type":"object","name":"GlyphRenderer","id":"p1326","attributes":{"data_source":{"type":"object","name":"ColumnDataSource","id":"p1317","attributes":{"selected":{"type":"object","name":"Selection","id":"p1318","attributes":{"indices":[],"line_indices":[]}},"selection_policy":{"type":"object","name":"UnionRenderers","id":"p1319"},"data":{"type":"map","entries":[["index",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAAEAAAACAAAAAwAAAAQAAAAFAAAA"},"shape":[6],"dtype":"int32","order":"little"}],["Item Insurance Price",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAABAn0AAAAAAAEBvQAAAAAAAcKdAAAAAAABAf0AAAAAAAECPQAAAAAAAAHlA"},"shape":[6],"dtype":"float64","order":"little"}],["Item Price",{"type":"ndarray","array":{"type":"bytes","data":"AAAAAABMzUAAAAAAAIizQAAAAACAhA5BAAAAAABwl0AAAAAAAOCFQAAAAAAAiLNA"},"shape":[6],"dtype":"float64","order":"little"}],["color",{"type":"ndarray","array":["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b"],"shape":[6],"dtype":"object","order":"little"}],["offset_x",{"type":"ndarray","array":{"type":"bytes","data":"zczMzMxAn0BmZmZmZkZvQGZmZmZmcKdAMzMzMzNDf0CamZmZmUGPQDMzMzMzA3lA"},"shape":[6],"dtype":"float64","order":"little"}]]}}},"view":{"type":"object","name":"CDSView","id":"p1327","attributes":{"filter":{"type":"object","name":"AllIndices","id":"p1328"}}},"glyph":{"type":"object","name":"VBar","id":"p1323","attributes":{"x":{"type":"field","field":"offset_x"},"width":{"type":"value","value":0.4},"top":{"type":"field","field":"Item Insurance Price"},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.6},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.6},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.6}}},"nonselection_glyph":{"type":"object","name":"VBar","id":"p1324","attributes":{"x":{"type":"field","field":"offset_x"},"width":{"type":"value","value":0.4},"top":{"type":"field","field":"Item Insurance Price"},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.1},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.1},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.1}}},"muted_glyph":{"type":"object","name":"VBar","id":"p1325","attributes":{"x":{"type":"field","field":"offset_x"},"width":{"type":"value","value":0.4},"top":{"type":"field","field":"Item Insurance Price"},"line_color":{"type":"field","field":"color"},"line_alpha":{"type":"value","value":0.2},"fill_color":{"type":"field","field":"color"},"fill_alpha":{"type":"value","value":0.2},"hatch_color":{"type":"field","field":"color"},"hatch_alpha":{"type":"value","value":0.2}}}}}],"toolbar":{"type":"object","name":"Toolbar","id":"p1279","attributes":{"tools":[{"type":"object","name":"PanTool","id":"p1293"},{"type":"object","name":"WheelZoomTool","id":"p1294","attributes":{"renderers":"auto"}},{"type":"object","name":"BoxZoomTool","id":"p1295","attributes":{"overlay":{"type":"object","name":"BoxAnnotation","id":"p1296","attributes":{"syncable":false,"line_color":"black","line_alpha":1.0,"line_width":2,"line_dash":[4,4],"fill_color":"lightgrey","fill_alpha":0.5,"level":"overlay","visible":false,"left":{"type":"number","value":"nan"},"right":{"type":"number","value":"nan"},"top":{"type":"number","value":"nan"},"bottom":{"type":"number","value":"nan"},"left_units":"canvas","right_units":"canvas","top_units":"canvas","bottom_units":"canvas","handles":{"type":"object","name":"BoxInteractionHandles","id":"p1302","attributes":{"all":{"type":"object","name":"AreaVisuals","id":"p1301","attributes":{"fill_color":"white","hover_fill_color":"lightgray"}}}}}}}},{"type":"object","name":"SaveTool","id":"p1303"},{"type":"object","name":"ResetTool","id":"p1304"},{"type":"object","name":"HelpTool","id":"p1305"}]}},"left":[{"type":"object","name":"LinearAxis","id":"p1288","attributes":{"ticker":{"type":"object","name":"BasicTicker","id":"p1289","attributes":{"mantissas":[1,2,5]}},"formatter":{"type":"object","name":"BasicTickFormatter","id":"p1290"},"axis_label":"Price","major_label_policy":{"type":"object","name":"AllLabels","id":"p1291"}}}],"below":[{"type":"object","name":"CategoricalAxis","id":"p1283","attributes":{"ticker":{"type":"object","name":"CategoricalTicker","id":"p1284"},"formatter":{"type":"object","name":"CategoricalTickFormatter","id":"p1285"},"axis_label":"Item Insurance Price","major_label_policy":{"type":"object","name":"AllLabels","id":"p1286"}}}],"center":[{"type":"object","name":"Grid","id":"p1287","attributes":{"axis":{"id":"p1283"},"grid_line_color":null}},{"type":"object","name":"Grid","id":"p1292","attributes":{"dimension":1,"axis":{"id":"p1288"},"grid_line_color":null}},{"type":"object","name":"Legend","id":"p1315","attributes":{"location":"top_center","orientation":"horizontal","items":[{"type":"object","name":"LegendItem","id":"p1316","attributes":{"label":{"type":"field","field":"Item Insurance Price"},"renderers":[{"id":"p1312"},{"id":"p1326"}]}}]}}]}}]}}
+    </script>
+    <script type="text/javascript">
+      (function() {
+        const fn = function() {
+          Bokeh.safely(function() {
+            (function(root) {
+              function embed_document(root) {
+              const docs_json = document.getElementById('b37d7198-46f6-4805-9f6f-ab4e385d1fb6').textContent;
+              const render_items = [{"docid":"5eb4adf5-a976-4b81-8599-f8955a77c839","roots":{"p1270":"a8b1236e-9809-4d8a-8534-0b9c30beeada"},"root_ids":["p1270"]}];
+              root.Bokeh.embed.embed_items(docs_json, render_items);
+              }
+              if (root.Bokeh !== undefined) {
+                embed_document(root);
+              } else {
+                let attempts = 0;
+                const timer = setInterval(function(root) {
+                  if (root.Bokeh !== undefined) {
+                    clearInterval(timer);
+                    embed_document(root);
+                  } else {
+                    attempts++;
+                    if (attempts > 100) {
+                      clearInterval(timer);
+                      console.log("Bokeh: ERROR: Unable to run BokehJS code because BokehJS library is missing");
+                    }
+                  }
+                }, 10, root)
+              }
+            })(window);
+          });
+        };
+        if (document.readyState != "loading") fn();
+        else document.addEventListener("DOMContentLoaded", fn);
+      })();
+    </script>
+  </body>
+</html>
