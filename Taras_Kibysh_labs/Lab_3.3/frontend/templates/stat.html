@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #2c3e50;
+        }
+        .stats {
+            margin-top: 10px;
+        }
+        .stats table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .stats th, .stats td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+        .stats th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Statistics Overview</h1>
+
+    <div class="section">
+        <h2>Item Insurance Price Stats</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average</th>
+                    <th>Median</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                </tr>
+                <tr>
+                    <td>{{ item_price_stats.average }}</td>
+                    <td>{{ item_price_stats.median }}</td>
+                    <td>{{ item_price_stats.min }}</td>
+                    <td>{{ item_price_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Insurance Price Stats</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average</th>
+                    <th>Median</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                </tr>
+                <tr>
+                    <td>{{ insurance_price_stats.average }}</td>
+                    <td>{{ insurance_price_stats.median }}</td>
+                    <td>{{ insurance_price_stats.min }}</td>
+                    <td>{{ insurance_price_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Average Salary by Position</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average Salary</th>
+                    <th>Median Salary</th>
+                    <th>Min Salary</th>
+                    <th>Max Salary</th>
+                </tr>
+                <tr>
+                    <td>{{ salary_stats.average }}</td>
+                    <td>{{ salary_stats.median }}</td>
+                    <td>{{ salary_stats.min }}</td>
+                    <td>{{ salary_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Age Statistics</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average Age</th>
+                    <th>Median Age</th>
+                    <th>Min Age</th>
+                    <th>Max Age</th>
+                </tr>
+                <tr>
+                    <td>{{ age_stats.average }}</td>
+                    <td>{{ age_stats.median }}</td>
+                    <td>{{ age_stats.min }}</td>
+                    <td>{{ age_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Status Statistics</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average Status Count</th>
+                    <th>Median Status Count</th>
+                    <th>Min Status Count</th>
+                    <th>Max Status Count</th>
+                </tr>
+                <tr>
+                    <td>{{ status_stats.average }}</td>
+                    <td>{{ status_stats.median }}</td>
+                    <td>{{ status_stats.min }}</td>
+                    <td>{{ status_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Worker Capacity Stats</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average</th>
+                    <th>Median</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                </tr>
+                <tr>
+                    <td>{{ worker_capacity_stats.average }}</td>
+                    <td>{{ worker_capacity_stats.median }}</td>
+                    <td>{{ worker_capacity_stats.min }}</td>
+                    <td>{{ worker_capacity_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Insurance Capacity Stats</h2>
+        <div class="stats">
+            <table>
+                <tr>
+                    <th>Average</th>
+                    <th>Median</th>
+                    <th>Min</th>
+                    <th>Max</th>
+                </tr>
+                <tr>
+                    <td>{{ insurance_capacity_stats.average }}</td>
+                    <td>{{ insurance_capacity_stats.median }}</td>
+                    <td>{{ insurance_capacity_stats.min }}</td>
+                    <td>{{ insurance_capacity_stats.max }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

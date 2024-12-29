@@ -1,6 +1,10 @@
 from django.urls import path
+from plotly.data import experiment
+
 from .views import *
 from .Diagram import *
+from .Diagram2 import *
+from .experiment import *
 
 urlpatterns = [
     path('user/', UserView.as_view(), name='customer'),  # Handles POST for creating and GET for fetching all users
@@ -19,6 +23,9 @@ urlpatterns = [
     path('cii/<int:f_id>,<int:s_id>/', CustomerItemInsuranceView.as_view(),name='CustomerItemInsurance_details'),
     path('dashdata/', DashboardDataView.as_view(), name='dash_data'),
     path('dashboard/', combined_charts, name='insurance_dashboard'),
+    path('dashboard2/', combined_charts_bokeh, name='insurance_dashboard'),
+    path('stat/', show_statistics, name='dash_data'),
+    path('experiment/', performance_chart, name='performance_chart' ),
     # path('salary/',average_salary_chart, name='average_salary_chart'),
 ]
 

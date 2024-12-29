@@ -9,7 +9,7 @@ from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerS
     ItemInsuranceSerializer, CustomerItemSerializer, CustomerHealthSerializer
 import pandas as pd
 
-
+from django.shortcuts import render
 class CommonMixin:
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
@@ -130,27 +130,176 @@ class CustomerItemInsuranceView(generics.GenericAPIView, CommonDoubleMixin):
 
 
 class DashboardDataView(APIView):
-    def getData(self, request):
-        # Отримання даних з репозиторія
-        repo = AggregatetedRepository()
+    def get_basic_statistics_for_item_and_price_of_insurance(self):
 
-        # Отримання даних у форматі DataFrame
-        insurance_data = pd.DataFrame(repo.capacity_of_insurance_by_year())
-        # Ви можете перетворювати інші дані подібним чином:
-        # average_salary_data = pd.DataFrame(repo.get_avarage_salary())
-        # age_information_data = pd.DataFrame(repo.get_age_information())
-        # status_statistics_data = pd.DataFrame(repo.get_status_statistics())
+        result = (
+            CustomerItemInsurance.objects
+            .select_related('item_insurance')
+            .values('price_of_item_insurance', 'item_insurance__item_price')
+        )
 
-        # Перетворення DataFrame назад у список словників для передачі у відповідь
-        data = {
-            # "average_salary": average_salary_data.to_dict(orient='records'),
-            # "age_information": age_information_data.to_dict(orient='records'),
-            # "status_statistics": status_statistics_data.to_dict(orient='records'),
-            "Insurance_count": insurance_data.to_dict(orient='records')
+
+        df = pd.DataFrame(result)
+
+
+        item_price_stats = {
+            'average': df['price_of_item_insurance'].mean() if not df['price_of_item_insurance'].isnull().all() else None,
+            'median': df['price_of_item_insurance'].median() if not df['price_of_item_insurance'].isnull().all() else None,
+            'min': df['price_of_item_insurance'].min() if not df['price_of_item_insurance'].isnull().all() else None,
+            'max': df['price_of_item_insurance'].max() if not df['price_of_item_insurance'].isnull().all() else None,
         }
 
-        return Response(data, status=status.HTTP_200_OK)
+
+        insurance_price_stats = {
+            'average': df['item_insurance__item_price'].mean() if not df['item_insurance__item_price'].isnull().all() else None,
+            'median': df['item_insurance__item_price'].median() if not df['item_insurance__item_price'].isnull().all() else None,
+            'min': df['item_insurance__item_price'].min() if not df['item_insurance__item_price'].isnull().all() else None,
+            'max': df['item_insurance__item_price'].max() if not df['item_insurance__item_price'].isnull().all() else None,
+        }
+
+        return item_price_stats, insurance_price_stats
 
 
+    def get_avarage_salary(self):
+
+        result = (
+            Worker.objects
+            .values('position')
+            .annotate(average_salary=Avg('salary'))
+        )
 
 
+        df = pd.DataFrame(result)
+
+
+        salary_stats = {
+            'average': df['average_salary'].mean(),
+            'median': df['average_salary'].median(),
+            'min': df['average_salary'].min(),
+            'max': df['average_salary'].max(),
+        }
+
+        return salary_stats
+
+    def get_age_information(self):
+        current_year = datetime.now().year
+
+
+        result = (
+            CustomerProfile.objects
+            .annotate(age_years=current_year - ExtractYear(F('date_of_birth')))
+            .values('age_years')
+        )
+
+
+        df = pd.DataFrame(result)
+
+
+        age_stats = {
+            'average': df['age_years'].mean() if not df['age_years'].isnull().all() else None,
+            'median': df['age_years'].median() if not df['age_years'].isnull().all() else None,
+            'min': df['age_years'].min() if not df['age_years'].isnull().all() else None,
+            'max': df['age_years'].max() if not df['age_years'].isnull().all() else None,
+        }
+
+        return age_stats
+
+    def get_status_statistics(self):
+        result = (
+            CustomerInsuranceInfo.objects
+            .values('status__status')
+            .annotate(count=Count('status'))
+            .order_by('-count')
+        )
+
+
+        df = pd.DataFrame(result)
+
+
+        status_stats = {
+            'average': df['count'].mean(),
+            'median': df['count'].median(),
+            'min': df['count'].min(),
+            'max': df['count'].max(),
+        }
+
+        return status_stats
+
+    def served_people_capacity_by_worker(self):
+        result = (
+            WorkerHasCustomerProfile.objects
+            .values("worker")
+            .annotate(count=Count("customer_profile"))
+            .order_by('-count')
+        )
+
+
+        df = pd.DataFrame(result)
+
+
+        worker_capacity_stats = {
+            'average': df['count'].mean(),
+            'median': df['count'].median(),
+            'min': df['count'].min(),
+            'max': df['count'].max(),
+        }
+
+        return worker_capacity_stats
+
+    def capacity_of_insurance_by_year(self):
+
+        item_insurance_data = (
+            CustomerItemInsurance.objects
+            .values(year=ExtractYear('creation_date'))
+            .annotate(count=Count('customer_insuranceinfo_id'))
+            .order_by('year')
+        )
+
+
+        health_insurance_data = (
+            CustomerHealthInsurance.objects
+            .values(year=ExtractYear('creation_date'))
+            .annotate(count=Count('id'))
+            .order_by('year')
+        )
+
+
+        item_df = pd.DataFrame(item_insurance_data)
+        health_df = pd.DataFrame(health_insurance_data)
+
+        combined_df = pd.concat([item_df, health_df]).groupby('year').sum().reset_index()
+
+
+        insurance_capacity_stats = {
+            'average': combined_df['count'].mean(),
+            'median': combined_df['count'].median(),
+            'min': combined_df['count'].min(),
+            'max': combined_df['count'].max(),
+        }
+
+        return insurance_capacity_stats
+
+def show_statistics(request):
+    repository = DashboardDataView()
+
+
+    item_price_stats, insurance_price_stats = repository.get_basic_statistics_for_item_and_price_of_insurance()
+    salary_stats = repository.get_avarage_salary()
+    age_stats = repository.get_age_information()
+    status_stats = repository.get_status_statistics()
+    worker_capacity_stats = repository.served_people_capacity_by_worker()
+    insurance_capacity_stats = repository.capacity_of_insurance_by_year()
+
+
+    context = {
+        'item_price_stats': item_price_stats,
+        'insurance_price_stats': insurance_price_stats,
+        'salary_stats': salary_stats,
+        'age_stats': age_stats,
+        'status_stats': status_stats,
+        'worker_capacity_stats': worker_capacity_stats,
+        'insurance_capacity_stats': insurance_capacity_stats,
+        }
+
+
+    return render(request, 'stat.html', context)
