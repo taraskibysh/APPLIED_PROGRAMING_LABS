@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from company.models import CustomerProfile
+from API.models import CustomerProfile
 
 class CustomerForm(ModelForm):
     class Meta:

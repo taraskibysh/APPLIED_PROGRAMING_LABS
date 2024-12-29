@@ -1,17 +1,7 @@
 from operator import truediv
 from django.http import QueryDict
 from rest_framework.response import Response
-from company.models import *
-from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer
-from rest_framework import generics, status
-from django.http import QueryDict
-from rest_framework.response import Response
-from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg
-from django.db.models.functions import Now, ExtractYear, Concat
-from datetime import datetime
-from django.http import QueryDict
-from rest_framework.response import Response
-from company.models import *
+from .models import *
 from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer
 from rest_framework import generics, status
 from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, Case, When, CharField, Q, Avg, DecimalField
