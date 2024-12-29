@@ -1,13 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="uk">
 <head>
-    <title>Performance Chart</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Performance Test Results</title>
+    <!-- Підключаємо Plotly для відображення графіків -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-    <h1>Performance Analysis</h1>
-    <div>
-        {{ graph_html|safe }}
+    <h1>Результати вимірювання ефективності</h1>
+
+    <h2>Час виконання запитів</h2>
+    <div id="graph_time">
+        <!-- Графік часу виконання запитів -->
+        {{ graph_html_time|safe }}
     </div>
+
+    <h2>Загруженість процесора</h2>
+    <div id="graph_cpu">
+        <!-- Графік використання процесора -->
+        {{ graph_html_cpu|safe }}
+    </div>
+
+    <h2>Використання пам'яті</h2>
+    <div id="graph_memory">
+        <!-- Графік використання пам'яті -->
+        {{ graph_html_memory|safe }}
+    </div>
+
 </body>
 </html>

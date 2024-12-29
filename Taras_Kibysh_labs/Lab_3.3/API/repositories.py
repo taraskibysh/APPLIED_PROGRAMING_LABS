@@ -135,8 +135,8 @@ class AggregatetedRepository:
             .values("position")
             .annotate(
                 average=ExpressionWrapper(
-                    Avg("salary"),  # Явно вказуємо тип для 'position'
-                    output_field=DecimalField()  # Вказуємо результат як DecimalField
+                    Avg("salary"),
+                    output_field=DecimalField()
                 )
             )
             .order_by("average")
@@ -145,11 +145,11 @@ class AggregatetedRepository:
 
 
     def get_age_information(self):
-        current_year = datetime.now().year  # Поточний рік
+        current_year = datetime.now().year
 
         result = (
             CustomerProfile.objects.annotate(
-                age_years=current_year - ExtractYear(F('date_of_birth'))  # Обчислюємо вік
+                age_years=current_year - ExtractYear(F('date_of_birth'))
             )
             .annotate(
                 age_group=Case(
@@ -157,15 +157,15 @@ class AggregatetedRepository:
                     When(age_years__gte=20, age_years__lt=40, then=Value('20-40')),
                     When(age_years__gte=40, age_years__lt=60, then=Value('40-60')),
                     default=Value('Other'),
-                    output_field=CharField(),  # Виправлення на CharField
+                    output_field=CharField(),
                 )
             )
-            .values('age_group')  # Групуємо за категорією віку
+            .values('age_group')
             .annotate(
-                male_count=Count('id', filter=Q(gender__gender_name='male')),  # Підрахунок чоловіків
-                female_count=Count('id', filter=Q(gender__gender_name='female'))  # Підрахунок жінок
+                male_count=Count('id', filter=Q(gender__gender_name='male')),
+                female_count=Count('id', filter=Q(gender__gender_name='female'))
             )
-            .order_by('age_group')  # Сортування за категорією
+            .order_by('age_group')
         )
         return result
 
@@ -173,9 +173,9 @@ class AggregatetedRepository:
     def get_status_statistics(self):
         result = (
             CustomerInsuranceInfo.objects
-            .values('status__status')  # Групуємо за статусом
-            .annotate(count=Count('status'))  # Підрахунок кількості за статусом
-            .order_by('-count')  # Сортуємо за кількістю у порядку спадання
+            .values('status__status')
+            .annotate(count=Count('status'))
+            .order_by('-count')
         )
 
         return result
@@ -183,17 +183,17 @@ class AggregatetedRepository:
     def served_people_capacity_by_worker(self):
         result = (
             WorkerHasCustomerProfile.objects
-            .values("worker")  # Вибираємо лише "worker" (не виводимо id)
+            .values("worker")
             .annotate(
-                worker_name=Concat(F('worker__name'), Value(' '), F('worker__surname'))  # Створюємо ім'я + прізвище
+                worker_name=Concat(F('worker__name'), Value(' '), F('worker__surname'))
             )
-            .annotate(count=Count("customer_profile"))  # Підраховуємо кількість
-            .order_by('-count')  # Сортуємо за кількістю
+            .annotate(count=Count("customer_profile"))
+            .order_by('-count')
         )
         return result
 
     def capacity_of_insurance_by_year(self):
-        # Перший запит для `customer_item_insurance`
+
         item_insurance_data = (
             CustomerItemInsurance.objects
             .values(year=ExtractYear('creation_date'))
@@ -201,7 +201,7 @@ class AggregatetedRepository:
             .order_by('year')
         )
 
-        # Другий запит для `customer_health_insurance`
+
         health_insurance_data = (
             CustomerHealthInsurance.objects
             .values(year=ExtractYear('creation_date'))
@@ -209,32 +209,32 @@ class AggregatetedRepository:
             .order_by('year')
         )
 
-        # Об'єднання результатів
+
         combined_data = defaultdict(int)
 
-        # Додавання результатів для `customer_item_insurance`
+
         for record in item_insurance_data:
             combined_data[record['year']] += record['count']
 
-        # Додавання результатів для `customer_health_insurance`
+
         for record in health_insurance_data:
             combined_data[record['year']] += record['count']
 
-        # Підготовка фінального результату
+
         final_result = [{'year': year, 'total_count': count} for year, count in combined_data.items()]
 
         # Сортування за роком
         final_result.sort(key=lambda x: x['year'])
 
-        # Виведення результатів
+
         return final_result
 
 
     def get_price_of_item_and_price_of_insurance(self):
         result = (
             CustomerItemInsurance.objects
-            .select_related('item_insurance')  # Виконуємо JOIN за допомогою ForeignKey
-            .values( 'price_of_item_insurance', 'item_insurance__item_price')  # Вибираємо необхідні поля
+            .select_related('item_insurance')
+            .values( 'price_of_item_insurance', 'item_insurance__item_price')
         )
         return result
 

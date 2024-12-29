@@ -131,17 +131,17 @@ class CustomerItemInsuranceView(generics.GenericAPIView, CommonDoubleMixin):
 
 class DashboardDataView(APIView):
     def get_basic_statistics_for_item_and_price_of_insurance(self):
-        # Query to get the required data
+
         result = (
             CustomerItemInsurance.objects
             .select_related('item_insurance')
             .values('price_of_item_insurance', 'item_insurance__item_price')
         )
 
-        # Convert to pandas DataFrame
+
         df = pd.DataFrame(result)
 
-        # Calculate statistics for item prices
+
         item_price_stats = {
             'average': df['price_of_item_insurance'].mean() if not df['price_of_item_insurance'].isnull().all() else None,
             'median': df['price_of_item_insurance'].median() if not df['price_of_item_insurance'].isnull().all() else None,
@@ -149,7 +149,7 @@ class DashboardDataView(APIView):
             'max': df['price_of_item_insurance'].max() if not df['price_of_item_insurance'].isnull().all() else None,
         }
 
-        # Calculate statistics for insurance prices
+
         insurance_price_stats = {
             'average': df['item_insurance__item_price'].mean() if not df['item_insurance__item_price'].isnull().all() else None,
             'median': df['item_insurance__item_price'].median() if not df['item_insurance__item_price'].isnull().all() else None,
@@ -159,28 +159,19 @@ class DashboardDataView(APIView):
 
         return item_price_stats, insurance_price_stats
 
-    def generate_statistics_html(self, item_price_stats, insurance_price_stats):
-        # Load the template for displaying the statistics
-        html_output = render_to_string('statistics_template.html', {
-            'item_price_stats': item_price_stats,
-            'insurance_price_stats': insurance_price_stats,
-        })
-
-        # Return the rendered HTML as an HttpResponse
-        return HttpResponse(html_output)
 
     def get_avarage_salary(self):
-        # Get average salary per position using pandas
+
         result = (
             Worker.objects
             .values('position')
             .annotate(average_salary=Avg('salary'))
         )
 
-        # Convert to pandas DataFrame
+
         df = pd.DataFrame(result)
 
-        # Calculate statistics for salary
+
         salary_stats = {
             'average': df['average_salary'].mean(),
             'median': df['average_salary'].median(),
@@ -191,19 +182,19 @@ class DashboardDataView(APIView):
         return salary_stats
 
     def get_age_information(self):
-        current_year = datetime.now().year  # Current year
+        current_year = datetime.now().year
 
-        # Retrieve age data and group it
+
         result = (
             CustomerProfile.objects
             .annotate(age_years=current_year - ExtractYear(F('date_of_birth')))
             .values('age_years')
         )
 
-        # Convert to pandas DataFrame
+
         df = pd.DataFrame(result)
 
-        # Calculate statistics for age
+
         age_stats = {
             'average': df['age_years'].mean() if not df['age_years'].isnull().all() else None,
             'median': df['age_years'].median() if not df['age_years'].isnull().all() else None,
@@ -221,10 +212,10 @@ class DashboardDataView(APIView):
             .order_by('-count')
         )
 
-        # Convert to pandas DataFrame
+
         df = pd.DataFrame(result)
 
-        # Calculate statistics for the count of statuses
+
         status_stats = {
             'average': df['count'].mean(),
             'median': df['count'].median(),
@@ -242,10 +233,10 @@ class DashboardDataView(APIView):
             .order_by('-count')
         )
 
-        # Convert to pandas DataFrame
+
         df = pd.DataFrame(result)
 
-        # Calculate statistics for worker capacity
+
         worker_capacity_stats = {
             'average': df['count'].mean(),
             'median': df['count'].median(),
@@ -256,7 +247,7 @@ class DashboardDataView(APIView):
         return worker_capacity_stats
 
     def capacity_of_insurance_by_year(self):
-        # First query for customer_item_insurance
+
         item_insurance_data = (
             CustomerItemInsurance.objects
             .values(year=ExtractYear('creation_date'))
@@ -264,7 +255,7 @@ class DashboardDataView(APIView):
             .order_by('year')
         )
 
-        # Second query for customer_health_insurance
+
         health_insurance_data = (
             CustomerHealthInsurance.objects
             .values(year=ExtractYear('creation_date'))
@@ -272,13 +263,13 @@ class DashboardDataView(APIView):
             .order_by('year')
         )
 
-        # Combine results
+
         item_df = pd.DataFrame(item_insurance_data)
         health_df = pd.DataFrame(health_insurance_data)
 
         combined_df = pd.concat([item_df, health_df]).groupby('year').sum().reset_index()
 
-        # Calculate statistics for insurance capacity by year
+
         insurance_capacity_stats = {
             'average': combined_df['count'].mean(),
             'median': combined_df['count'].median(),
@@ -291,7 +282,7 @@ class DashboardDataView(APIView):
 def show_statistics(request):
     repository = DashboardDataView()
 
-    # Fetch all statistics data
+
     item_price_stats, insurance_price_stats = repository.get_basic_statistics_for_item_and_price_of_insurance()
     salary_stats = repository.get_avarage_salary()
     age_stats = repository.get_age_information()
@@ -299,7 +290,7 @@ def show_statistics(request):
     worker_capacity_stats = repository.served_people_capacity_by_worker()
     insurance_capacity_stats = repository.capacity_of_insurance_by_year()
 
-        # Prepare all the data to be passed to the template
+
     context = {
         'item_price_stats': item_price_stats,
         'insurance_price_stats': insurance_price_stats,
@@ -310,5 +301,5 @@ def show_statistics(request):
         'insurance_capacity_stats': insurance_capacity_stats,
         }
 
-    # Render the HTML response with the context
+
     return render(request, 'stat.html', context)
