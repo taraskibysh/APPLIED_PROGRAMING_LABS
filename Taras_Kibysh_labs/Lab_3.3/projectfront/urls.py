@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('API.urls')),
     path('api-auth/', include('rest_framework.urls')),
-    path('site/', include('frontend.urls')),
+    path('site/', include('NetworkHelper.urls')),
 ]
 
 admin.site.index_title = 'insurance company'

@@ -50,14 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.sites',  # Required for allauth
     'rest_framework',
     'rest_framework.authtoken',
-    'company',
     'API',
     'allauth',
     'allauth.account',
     'dj_rest_auth',
     'dj_rest_auth.registration',
     'allauth.socialaccount',
-    'frontend',
+    'NetworkHelper',
     'django_plotly_dash.apps.DjangoPlotlyDashConfig'
     # 'debug_toolbar'
 ]
@@ -102,7 +101,7 @@ ROOT_URLCONF = 'projectfront.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'frontend/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -22,7 +22,7 @@ def user_list_view(request):
         users = []
         print(f"Помилка API: Статус {response.status_code}")  # Діагностика статусу відповіді
 
-    return render(request, 'frontend/list.html', {'users': users})
+    return render(request, 'NetworkHelper/list.html', {'users': users})
 
 
 def get_user(request, id):
@@ -35,7 +35,7 @@ def get_user(request, id):
         user = None
         print(f"Помилка API: Статус {response.status_code}")
 
-    return render(request, 'frontend/one_user.html', {'user': user})
+    return render(request, 'NetworkHelper/one_user.html', {'user': user})
 
 
 
@@ -80,7 +80,7 @@ def create_user(request):
 
     context = {'form': form}
     print("hello world")
-    return render(request, 'frontend/create_form.html', context)
+    return render(request, 'NetworkHelper/create_form.html', context)
 
 
 
@@ -115,7 +115,7 @@ def change_user(request, id):
         else:
             form.add_error(None, "Дані форми некоректні. Будь ласка, перевірте введені дані.")
 
-    return render(request, 'frontend/change_form.html', {'form': form, 'user': user_data})
+    return render(request, 'NetworkHelper/change_form.html', {'form': form, 'user': user_data})
 
 
 
