@@ -8,6 +8,8 @@ from django.db.models import  ExpressionWrapper, IntegerField, F, Value, Count, 
 from django.db.models.functions import Now, ExtractYear, Concat
 from datetime import datetime
 from collections import defaultdict
+from rest_framework.exceptions import NotFound
+
 
 
 
@@ -20,55 +22,24 @@ class UserRepository:
 
 
 
-    def get_by_id(self, user_id, serializer_class):
+    def get_by_id(self, user_id):
         try:
             user = self.model.objects.get(id=user_id)
-            serializer = serializer_class(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return user
         except self.model.DoesNotExist:
-            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+            raise NotFound(f"User with id {user_id} does not exist")
 
-    def get_all(self, serializer_class):
+    def get_all(self):
         users = self.model.objects.all()
-        serializer = serializer_class(users, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-    def create(self, serializer_class, data):
-        # Convert QueryDict to a regular dictionary if neede
-
-        serializer = serializer_class(data=data)  # Pass the cleaned data to serializer
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def update(self, data, user_id, serializer_class):
-        # Ensure `data` is in dictionary form if passed as a `QueryDict`
-
-        # Retrieve the user instance directly
-        try:
-            user = self.model.objects.get(id=user_id)
-        except self.model.DoesNotExist:
-            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
-
-        # Pass the user instance and updated data to the serializer
-        serializer = serializer_class(user, data=data, partial=True)  # `partial=True` allows updating specific fields only
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+        return users
 
     def delete(self,user_id):
         user = self.model.objects.get(id=user_id)
         if user:
             user.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return True
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return False
 
 
 

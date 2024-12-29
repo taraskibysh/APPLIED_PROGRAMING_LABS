@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.decorators import APIView
+from yaml import serialize
+
 from .models import *
 from .repositories import *
 from .serializer import CustomerSerializer, WorkerHasCustomerSerializer, WorkerSerializer, InsuranceInfoSerializer, \
@@ -13,24 +15,48 @@ from django.shortcuts import render
 class CommonMixin:
     # authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
+    serializer_class = CustomerSerializer
     def get(self, request, id=None):
         if id:
-            return self.repository.get_by_id(id, self.serializer_class)
-        return self.repository.get_all(self.serializer_class)
+                user =  self.repository.get_by_id(id)
+                serializer = self.serializer_class(user)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            users = self.repository.get_all()
+            serializer = self.serializer_class(users, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
 
     def post(self, request):
-        return self.repository.create(self.serializer_class, request.data)
+
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
 
     def put(self, request, id):
-        return self.repository.update(request.data, id, self.serializer_class)
+        user = self.repository.get_by_id(id)
+        serializer = self.serializer_class(user, data=request.data, partial=True)  # `partial=True` allows updating specific fields only
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, id):
-        return self.repository.delete(id)
+        answear = self.repository.delete(id)
+        if answear:
+            return Response(status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 class UserView(APIView, CommonMixin):
-    # authentication_classes = [SessionAuthentication, BasicAuthentication]
-    # permission_classes = [IsAuthenticated]
     serializer_class = CustomerSerializer
     repository = UserRepository(CustomerProfile)
 
