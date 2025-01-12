@@ -1,7 +1,7 @@
 from django.urls import path
 from .NetworkHelper import Artist
 
-import frontend
+import NetworkHelper
 from .views import *
 
 urlpatterns = [
